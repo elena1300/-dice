@@ -3,13 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>晚餐骰子測試</title>
+    <title>晚餐骨架版</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .day { margin-bottom: 10px; border-bottom: 1px solid #ccc; padding: 5px; }
+        .weight-hint { font-size: 0.8rem; color: #666; }
+        button { padding: 10px 20px; font-size: 1rem; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <div style="text-align:center; padding-top:50px;">
-        <h1 style="color:red;">骰子測試成功！</h1>
-        <p>如果你看到這行字，代表網頁運作正常。</p>
-        <button onclick="alert('你抽到了炒蛋！')">點我測試按鈕</button>
-    </div>
+
+    <h2>🍲 我的晚餐骰子 (邏輯測試版)</h2>
+    
+    <div id="output">
+        </div>
+
+    <br>
+    <button onclick="roll()">開始抽籤</button>
+
+    <hr>
+    <h3>⚙️ 後台權重設定說明：</h3>
+    <ul class="weight-hint">
+        <li><b>常吃 (權重 10)：</b> 蛋料理、拌麵、水餃</li>
+        <li><b>偶爾 (權重 2)：</b> 牛排、外送、大菜</li>
+    </ul>
+
+<script>
+    // 【後台資料區】你之後可以直接在這裡加菜
+    // name: 菜名, weight: 機率(越大越高)
+    const myRecipes = [
+        { name: "🍳 醬油炒蛋 + 青菜", weight: 10 },
+        { name: "🍜 乾拌麵 + 蛋", weight: 10 },
+        { name: "🥟 水餃 10 顆", weight: 8 },
+        { name: "🥩 煎牛排 (少吃)", weight: 2 },
+        { name: "🍲 泡菜豆腐鍋", weight: 7 },
+        { name: "🍗 烤雞胸肉沙拉", weight: 6 },
+        { name: "🍱 超市折扣便當", weight: 4 }
+    ];
+
+    function roll() {
+        const days = ["週一", "週二", "週三", "週四", "週五"];
+        const output = document.getElementById('output');
+        output.innerHTML = ""; // 清空舊的
+
+        // 核心邏輯：建立抽獎箱
+        let lotteryBox = [];
+        myRecipes.forEach(item => {
+            // 根據權重，把名字重複塞進箱子裡
+            for (let i = 0; i < item.weight; i++) {
+                lotteryBox.push(item.name);
+            }
+        });
+
+        // 開始從箱子裡抓 5 天的份
+        days.forEach(day => {
+            const randomIndex = Math.floor(Math.random() * lotteryBox.length);
+            const pickedMeal = lotteryBox[randomIndex];
+            
+            const div = document.createElement('div');
+            div.className = 'day';
+            div.innerHTML = `<b>${day}</b>：${pickedMeal}`;
+            output.appendChild(div);
+        });
+    }
+</script>
+
 </body>
 </html>
